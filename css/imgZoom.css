@@ -1,0 +1,60 @@
+#modalDiv{
+    position:absolute;
+    z-index:10002;
+    background-color:#fff;
+    left:50%;
+    top:50%;
+}
+#bodyMask{
+    position: absolute;
+    z-index: 10000;
+    top:0;
+    left: 0;
+    background-color: #000;
+    filter:alpha(opacity=40);
+    opacity: 0.4;
+}
+#modalDiv input{
+    position: absolute;
+    bottom: 2%;
+    width: 80px;
+    height: 6%;
+    left: 50%;
+    background-color: #1ea131;
+    color: #fff;
+    border: 0;
+    font-size: 14px;
+    font-family:"Microsoft Yahei";
+    cursor: pointer;
+}
+#closeBtn{
+    margin-left: -40px;
+}
+#reStart{
+    margin-left: -96px;
+}
+#imgOuter{
+    width: 100%;
+    height: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: absolute;
+}
+#modalImg{
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    cursor: pointer;
+}
+.imgZoom{
+    cursor: pointer;
+}
+#m-tip{
+    font-family: "Microsoft YaHei";
+    font-size: 15px;
+    line-height: 15px;
+    position: absolute;
+    bottom: 2px;
+    left: 27px;
+}
