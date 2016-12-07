@@ -200,6 +200,7 @@
             else{
                 config.windowHeight=document.documentElement.scrollHeight;
             }
+            //modal
             var modalDivHtml = document.createElement("div");
             modalDivHtml.id = "modalDiv";
             modalDivHtml.style.width = config.modalWidth + 'px';
@@ -207,15 +208,30 @@
             modalDivHtml.style.marginLeft ='-' + config.modalWidth/2 + 'px';
             modalDivHtml.style.marginTop ='-' + config.modalHeight/2 + 'px';
             document.body.appendChild(modalDivHtml);
+            //关闭按钮
             var inputHtml = document.createElement("input");
             inputHtml.id = "closeBtn";
             inputHtml.type = "button";
             inputHtml.value = "关闭";
             document.getElementById('modalDiv').appendChild(inputHtml);
+            //缩放按钮
+            var ulHtml = document.createElement("ul");
+            var liHtml1 = document.createElement("li");
+            var liHtml2 = document.createElement("li");
+            ulHtml.id = "ulHtml";
+            liHtml1.id = "liHtml1";
+            liHtml2.id = "liHtml2";
+            liHtml1.innerText = "+";
+            liHtml2.innerText = "—";
+            document.getElementById('modalDiv').appendChild(ulHtml);
+            document.getElementById('ulHtml').appendChild(liHtml1);
+            document.getElementById('ulHtml').appendChild(liHtml2);
+            //提示tip
             var inputHtml = document.createElement("p");
             inputHtml.id = "m-tip";
             inputHtml.innerHTML = "请滚动鼠标滚轮缩放图片," + "<br/>" + "按住鼠标左键进行图片拖拽。";
             document.getElementById('modalDiv').appendChild(inputHtml);
+            //灰色背景
             var bodyMask=document.createElement("div");
             bodyMask.id="bodyMask";
             //这个灰色遮罩层的长与宽就是当前窗口的长与宽。
