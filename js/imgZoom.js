@@ -120,9 +120,13 @@
             self.addWheelEvent($oImg, function(delta) {
                 var modalDivW = document.getElementById('modalDiv').offsetLeft;
                 var modalDivH = document.getElementById('modalDiv').offsetTop;
+                var $liHtml1 = document.getElementById('liHtml1');
+                var $liHtml2 = document.getElementById('liHtml2');
+                var $clientX = this.clientX;
+                var $clientY = this.clientY;
                 var mTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-                var ratioL = (this.clientX - $oImg.offsetLeft - modalDivW) / $oImg.offsetWidth,
-                    ratioT = (this.clientY - $oImg.offsetTop - modalDivH + mTop) / $oImg.offsetHeight,
+                var ratioL = ($clientX - $oImg.offsetLeft - modalDivW) / $oImg.offsetWidth,
+                    ratioT = ($clientY - $oImg.offsetTop - modalDivH + mTop) / $oImg.offsetHeight,
                     ratioDelta = !delta ? 1 + 0.1 : 1 - 0.1,
                     w = parseInt($oImg.offsetWidth * ratioDelta),
                     h = parseInt($oImg.offsetHeight * ratioDelta),
