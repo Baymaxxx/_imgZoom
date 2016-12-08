@@ -9,6 +9,7 @@
             //弹出框宽高
             modalWidth:760,
             modalHeight:500,
+            offsetHeight:300,
             offsetML:'',
             offsetMT:'',
             offsetT:'',
@@ -84,8 +85,6 @@
             }
             config.imgSrc = currTarget.src || currTarget.href;
             config.imgAlt = currTarget.alt;
-            //图片宽高比
-            config.w$h = currTarget.width/currTarget.height;
             self.addModal();
             //放大后图片事件
             var $oImg = document.getElementById('modalImg');
@@ -138,8 +137,8 @@
                     height = h +'px';
                     left = l - modalDivW +'px';
                     top = t - modalDivH + mTop +'px';
-                    marginLeft = 0;
-                    marginTop = 0;
+                    marginLeft = 0 + 'px';
+                    marginTop = 0 + 'px';
                 }
             }
             (function zoomClick() {
@@ -147,34 +146,44 @@
                 var $liHtml1 = document.getElementById('liHtml1');
                 var $liHtml2 = document.getElementById('liHtml2');
                 var modalDiv = document.getElementById('modalDiv');
-                var modalImg = document.getElementById('modalImg');
+                var $oImg = document.getElementById('modalImg');
                 self.addEvent($liHtml1,'click',function () {
-                    modalImg.style.width = modalImg.offsetWidth*1.1 + 'px';
-                    modalImg.style.height = modalImg.offsetHeight*1.1 + 'px';
-                    modalImg.style.left = '50%';
-                    modalImg.style.top = '50%';
-                    modalImg.style.marginLeft = '-' + parseInt(modalImg.style.width)/2 + 'px';
-                    modalImg.style.marginTop = '-' + parseInt(modalImg.style.height)/2 + 'px';
+                    if($oImg.style.marginLeft !== "0px"){
+                        var imgMidX = document.body.offsetWidth/2;
+                        var imgMidY = config.offsetHeight;
+                    }else {
+                        var imgMidX = document.body.offsetWidth/2 - modalDiv.offsetWidth/2 + parseInt($oImg.style.left) + parseInt($oImg.style.width)/2;
+                        var imgMidY = config.offsetHeight - modalDiv.offsetHeight/2 + parseInt($oImg.style.top) + parseInt($oImg.style.height)/2;
+                    }
+                    zoom(0,imgMidX,imgMidY);
                 });
                 self.addEvent($liHtml2,'click',function () {
-                    modalImg.style.width = modalImg.offsetWidth/1.1 + 'px';
-                    modalImg.style.height = modalImg.offsetHeight/1.1 + 'px';
-                    modalImg.style.left = '50%';
-                    modalImg.style.top = '50%';
-                    modalImg.style.marginLeft = '-' + parseInt(modalImg.style.width)/2 + 'px';
-                    modalImg.style.marginTop = '-' + parseInt(modalImg.style.height)/2 + 'px';
+                    if($oImg.style.marginLeft !== "0px"){
+                        var imgMidX = document.body.offsetWidth/2;
+                        var imgMidY = config.offsetHeight;
+                    }else {
+                        var imgMidX = document.body.offsetWidth/2 - modalDiv.offsetWidth/2 + parseInt($oImg.style.left) + parseInt($oImg.style.width)/2;
+                        var imgMidY = config.offsetHeight - modalDiv.offsetHeight/2 + parseInt($oImg.style.top) + parseInt($oImg.style.height)/2;
+                    }
+                    if($oImg.offsetWidth>100){
+                        zoom(1,imgMidX,imgMidY);
+                    }
                 });
+                self.addEvent(ulHtml,'selectstart',function () {
+                    return false;
+                })
             })();
             self.addWheelEvent($oImg, function(delta) {
                 var $clientX = this.clientX;
                 var $clientY = this.clientY;
-                zoom(delta,$clientX,$clientY);
+                if($oImg.offsetWidth>100||delta==0) {
+                    zoom(delta, $clientX, $clientY);
+                }
             });
             var modalDiv = document.getElementById('modalDiv');
             //模态框定位
-            var mTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
-                mcHeight = 600;
-            modalDiv.style.top = mTop + mcHeight/2 + 'px';
+            var mTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+            modalDiv.style.top = mTop + config.offsetHeight + 'px';
             self.dblClickFun();
         },
         //双击还原
@@ -203,7 +212,9 @@
             imgOuter.appendChild(imgHtml);
             var modalImg = document.getElementById('modalImg');
             var imgOuterHeight = imgOuter.offsetHeight;
-            var modalImgHeight = modalImg.height;
+            var modalImgHeight = parseInt(modalImg.height);
+            //图片宽高比
+            config.w$h = modalImg.width/modalImg.height;
                 if(modalImgHeight > imgOuterHeight){
                     modalImg.style.height = imgOuterHeight + 'px';
                     modalImg.style.width = imgOuterHeight*config.w$h + 'px';
@@ -254,15 +265,15 @@
             ulHtml.id = "ulHtml";
             liHtml1.id = "liHtml1";
             liHtml2.id = "liHtml2";
-            liHtml1.innerText = "+";
-            liHtml2.innerText = "—";
+            liHtml1.innerText = "＋";
+            liHtml2.innerText = "－";
             document.getElementById('modalDiv').appendChild(ulHtml);
             document.getElementById('ulHtml').appendChild(liHtml1);
             document.getElementById('ulHtml').appendChild(liHtml2);
             //提示tip
             var inputHtml = document.createElement("p");
             inputHtml.id = "m-tip";
-            inputHtml.innerHTML = "提示：请滚动鼠标滚轮缩放图片，按住鼠标左键可拖拽图片，" + "<br/>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;双击图片可恢复图片预览大小。";
+            inputHtml.innerHTML = "<span>提示：请滚动鼠标滚轮缩放图片，按住鼠标左键可拖拽图片，</span>" + "<span id='spanLine2'>双击图片可恢复图片预览大小。</span>";
             document.getElementById('modalDiv').appendChild(inputHtml);
             //灰色背景
             var bodyMask=document.createElement("div");
