@@ -77,7 +77,12 @@
         //点击事件回调
         clickFun: function (event) {
             var currTarget = event.target||event.srcElement;
-            config.imgSrc = currTarget.src;
+            //a标签不跳转
+            if(currTarget.href){
+                self.prEvent(event);
+                window.event.returnValue = false;
+            }
+            config.imgSrc = currTarget.src || currTarget.href;
             config.imgAlt = currTarget.alt;
             //图片宽高比
             config.w$h = currTarget.width/currTarget.height;
@@ -117,21 +122,17 @@
                 return false;
             });
             /*以鼠标位置为中心的滑轮放大功能*/
-            self.addWheelEvent($oImg, function(delta) {
+            function zoom(delta,$clientX,$clientY) {
                 var modalDivW = document.getElementById('modalDiv').offsetLeft;
                 var modalDivH = document.getElementById('modalDiv').offsetTop;
-                var $liHtml1 = document.getElementById('liHtml1');
-                var $liHtml2 = document.getElementById('liHtml2');
-                var $clientX = this.clientX;
-                var $clientY = this.clientY;
                 var mTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
                 var ratioL = ($clientX - $oImg.offsetLeft - modalDivW) / $oImg.offsetWidth,
                     ratioT = ($clientY - $oImg.offsetTop - modalDivH + mTop) / $oImg.offsetHeight,
                     ratioDelta = !delta ? 1 + 0.1 : 1 - 0.1,
                     w = parseInt($oImg.offsetWidth * ratioDelta),
                     h = parseInt($oImg.offsetHeight * ratioDelta),
-                    l = Math.round(this.clientX - (w * ratioL)),
-                    t = Math.round(this.clientY - (h * ratioT));
+                    l = Math.round($clientX- (w * ratioL)),
+                    t = Math.round($clientY - (h * ratioT));
                 with($oImg.style) {
                     width = w +'px';
                     height = h +'px';
@@ -140,16 +141,43 @@
                     marginLeft = 0;
                     marginTop = 0;
                 }
+            }
+            (function zoomClick() {
+                var ulHtml = document.getElementById('ulHtml');
+                var $liHtml1 = document.getElementById('liHtml1');
+                var $liHtml2 = document.getElementById('liHtml2');
+                var modalDiv = document.getElementById('modalDiv');
+                var modalImg = document.getElementById('modalImg');
+                self.addEvent($liHtml1,'click',function () {
+                    modalImg.style.width = modalImg.offsetWidth*1.1 + 'px';
+                    modalImg.style.height = modalImg.offsetHeight*1.1 + 'px';
+                    modalImg.style.left = '50%';
+                    modalImg.style.top = '50%';
+                    modalImg.style.marginLeft = '-' + parseInt(modalImg.style.width)/2 + 'px';
+                    modalImg.style.marginTop = '-' + parseInt(modalImg.style.height)/2 + 'px';
+                });
+                self.addEvent($liHtml2,'click',function () {
+                    modalImg.style.width = modalImg.offsetWidth/1.1 + 'px';
+                    modalImg.style.height = modalImg.offsetHeight/1.1 + 'px';
+                    modalImg.style.left = '50%';
+                    modalImg.style.top = '50%';
+                    modalImg.style.marginLeft = '-' + parseInt(modalImg.style.width)/2 + 'px';
+                    modalImg.style.marginTop = '-' + parseInt(modalImg.style.height)/2 + 'px';
+                });
+            })();
+            self.addWheelEvent($oImg, function(delta) {
+                var $clientX = this.clientX;
+                var $clientY = this.clientY;
+                zoom(delta,$clientX,$clientY);
             });
             var modalDiv = document.getElementById('modalDiv');
+            //模态框定位
             var mTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop,
-                mLeft = document.body.scrollLeft,
-                mcHeight = 600,
-                mcWidth = document.body.clientWidth;
-            modalDiv.style.left = mLeft + mcWidth/2 + 'px';
+                mcHeight = 600;
             modalDiv.style.top = mTop + mcHeight/2 + 'px';
             self.dblClickFun();
         },
+        //双击还原
         dblClickFun:function (event) {
             var modalImg = document.getElementById("modalImg");
             self.addEvent(modalImg,'dblclick',function () {
@@ -161,6 +189,7 @@
                 modalImg.style.height = config.offsetH;
             });
         },
+        //载入图片
         appendImg: function () {
             var imgOuterHtml = document.createElement("div");
             imgOuterHtml.id = 'imgOuter';
@@ -233,7 +262,7 @@
             //提示tip
             var inputHtml = document.createElement("p");
             inputHtml.id = "m-tip";
-            inputHtml.innerHTML = "请滚动鼠标滚轮缩放图片," + "<br/>" + "按住鼠标左键进行图片拖拽。";
+            inputHtml.innerHTML = "提示：请滚动鼠标滚轮缩放图片，按住鼠标左键可拖拽图片，" + "<br/>" + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;双击图片可恢复图片预览大小。";
             document.getElementById('modalDiv').appendChild(inputHtml);
             //灰色背景
             var bodyMask=document.createElement("div");

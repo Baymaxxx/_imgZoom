@@ -73,9 +73,10 @@
 }
 #m-tip{
     font-family: "Microsoft YaHei";
-    font-size: 15px;
+    font-size: 12px;
     line-height: 15px;
     position: absolute;
-    bottom: 2px;
-    left: 27px;
+    bottom: 0px;
+    left: 7px;
+    color: red;
 }
