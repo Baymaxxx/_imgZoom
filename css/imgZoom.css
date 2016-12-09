@@ -1,7 +1,7 @@
 #modalDiv{
     position:absolute;
     z-index:10002;
-    background-color:#fff;
+    background-color:#f5f5f5;
     left:50%;
     top:50%;
 }
@@ -70,6 +70,7 @@
     margin: 0 auto;
     overflow: hidden;
     position: absolute;
+    background-color: #fff;
 }
 #modalImg{
     display: block;
